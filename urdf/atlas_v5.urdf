@@ -15,12 +15,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_clav.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_clav.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_clav.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_clav.dae"/>
       </geometry>
     </collision>
   </link>
@@ -32,12 +32,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_foot.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_foot.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_foot.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_foot.dae"/>
       </geometry>
     </collision>
   </link>
@@ -56,12 +56,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_larm.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_larm.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_larm.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_larm.dae"/>
       </geometry>
     </collision>
   </link>
@@ -73,12 +73,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_hand.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_hand.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_hand.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_hand.dae"/>
       </geometry>
     </collision>
   </link>
@@ -90,12 +90,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_lglut.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_lglut.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_lglut.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_lglut.dae"/>
       </geometry>
     </collision>
   </link>
@@ -107,12 +107,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_lleg.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_lleg.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_lleg.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_lleg.dae"/>
       </geometry>
     </collision>
   </link>
@@ -124,12 +124,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_scap.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_scap.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_scap.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_scap.dae"/>
       </geometry>
     </collision>
   </link>
@@ -141,12 +141,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_talus.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_talus.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_talus.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_talus.dae"/>
       </geometry>
     </collision>
   </link>
@@ -158,12 +158,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_uarm.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_uarm.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_uarm.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_uarm.dae"/>
       </geometry>
     </collision>
   </link>
@@ -175,12 +175,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_farm.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_farm.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_farm.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_farm.dae"/>
       </geometry>
     </collision>
   </link>
@@ -192,12 +192,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_uglut.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_uglut.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_uglut.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_uglut.dae"/>
       </geometry>
     </collision>
   </link>
@@ -209,12 +209,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_uleg.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_uleg.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/l_uleg.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/l_uleg.dae"/>
       </geometry>
     </collision>
   </link>
@@ -226,12 +226,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/ltorso.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/ltorso.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/ltorso.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/ltorso.dae"/>
       </geometry>
     </collision>
   </link>
@@ -243,12 +243,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/mtorso.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/mtorso.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/mtorso.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/mtorso.dae"/>
       </geometry>
     </collision>
   </link>
@@ -260,12 +260,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/pelvis.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/pelvis.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/pelvis.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/pelvis.dae"/>
       </geometry>
     </collision>
   </link>
@@ -277,12 +277,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_clav.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_clav.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_clav.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_clav.dae"/>
       </geometry>
     </collision>
   </link>
@@ -294,12 +294,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_foot.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_foot.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_foot.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_foot.dae"/>
       </geometry>
     </collision>
   </link>
@@ -318,12 +318,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_larm.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_larm.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_larm.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_larm.dae"/>
       </geometry>
     </collision>
   </link>
@@ -335,12 +335,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_hand.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_hand.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_hand.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_hand.dae"/>
       </geometry>
     </collision>
   </link>
@@ -352,12 +352,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_lglut.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_lglut.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_lglut.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_lglut.dae"/>
       </geometry>
     </collision>
   </link>
@@ -369,12 +369,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_lleg.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_lleg.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_lleg.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_lleg.dae"/>
       </geometry>
     </collision>
   </link>
@@ -386,12 +386,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_scap.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_scap.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_scap.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_scap.dae"/>
       </geometry>
     </collision>
   </link>
@@ -403,12 +403,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_talus.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_talus.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_talus.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_talus.dae"/>
       </geometry>
     </collision>
   </link>
@@ -420,12 +420,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_uarm.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_uarm.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_uarm.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_uarm.dae"/>
       </geometry>
     </collision>
   </link>
@@ -437,12 +437,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_farm.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_farm.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_farm.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_farm.dae"/>
       </geometry>
     </collision>
   </link>
@@ -454,12 +454,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_uglut.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_uglut.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_uglut.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_uglut.dae"/>
       </geometry>
     </collision>
   </link>
@@ -471,12 +471,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_uleg.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_uleg.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/r_uleg.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/r_uleg.dae"/>
       </geometry>
     </collision>
   </link>
@@ -488,12 +488,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/utorso.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/utorso.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://ME133afinal/meshes_unplugged/utorso.dae"/>
+        <mesh filename="package://me133a_final/meshes_unplugged/utorso.dae"/>
       </geometry>
     </collision>
   </link>

@@ -26,6 +26,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'simple_traj = me133a_final.simple_traj:main',
         ],
     },
 )

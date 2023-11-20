@@ -23,26 +23,24 @@ from hw5code.TrajectoryUtils    import *
 from hw5code.KinematicChain     import KinematicChain
 
 # list the joints in same order as atlas_v5.urdf
-joint_list = ['back_bkx', 'back_bky', 'back_bkz', 
-              'l_arm_elx', 'l_arm_ely',
-              'l_arm_shx', 'l_arm_shz', 
-              'l_arm_wrx', 'l_arm_wry', 'l_arm_wry2', 
-              'l_leg_akx', 'l_leg_aky',
-              'l_leg_hpx', 'l_leg_hpy', 'l_leg_hpz',
-              'l_leg_kny',
-              'neck_ry',
-              'r_arm_elx', 'r_arm_ely',
-              'r_arm_shx', 'r_arm_shz',
-              'r_arm_wrx', 'r_arm_wry', 'r_arm_wry2',
-              'r_leg_akx', 'r_leg_aky',
-              'r_leg_hpx', 'r_leg_hpy', 'r_leg_hpz',
-              'r_leg_kny',
-              'r_situational_awareness_camera_joint',
-              'r_situational_awareness_camera_optical_frame_joint',
-              'l_situational_awareness_camera_joint',
-              'l_situational_awareness_camera_optical_frame_joint',
-              'rear_situational_awareness_camera_joint',
-              'rear_situational_awareness_camera_optical_frame_joint']
+joint_list_rhand = ['back_bkz', 'back_bky', 'back_bkx',
+                   'r_arm_shz', 'r_arm_shx',
+                   'r_arm_ely', 'r_arm_elx',
+                   'r_arm_wry', 'r_arm_wrx', 'r_arm_wry2']
+
+joint_list_lhand = ['back_bkz', 'back_bky', 'back_bkx',
+                   'l_arm_shz', 'l_arm_shx',
+                   'l_arm_ely', 'l_arm_elx',
+                   'l_arm_wry', 'l_arm_wrx', 'l_arm_wry2']
+
+joint_list_rfoot = []
+
+joint_list_lfoot = []
+
+jointnames_dict = {'rhand':joint_list_rhand,
+                   'lhand':joint_list_lhand,
+                   'rfoot':joint_list_rfoot,
+                   'lfoot':joint_list_lfoot}
 
 num_joints = 36 # total number of atlas joints
 
@@ -53,34 +51,38 @@ class Trajectory():
     # Initialization.
     def __init__(self, node):
         # Set up the kinematic chain object.
-        self.chain = KinematicChain(node, 'world', 'tip', self.jointnames())
+        self.chain_rarm = KinematicChain(node, 'pelvis', 'r_hand', self.jointnames('rhand'))
+        self.chain_larm = KinematicChain(node, 'pelvis', 'l_hand', self.jointnames('lhand'))
 
         # Set up the condition number publisher
         self.pub = node.create_publisher(Float64, '/condition', 10)
 
-        # Define the various points.
-        self.q0 = np.radians(np.array([0.0, 46.5675, 0.0, -93.1349, 0.0, 0.0, 46.5675]).reshape((-1,1)))
-        self.p0 = np.array([0.0, 0.7, 0.6]).reshape((-1,1))
-        self.R0 = Reye()
+        # Define the various points and initialize as initial joint/task arrays.
+        self.q_r = np.radians(np.array([0.0, 0.0, 0.0,
+                                        0.743, -1.027,
+                                        0.0, -0.662,
+                                        0.0, -0.505, 0.0]).reshape((-1,1)))
+        (self.x_r, self.R_r, _, _) = self.chain_rarm.fkin(self.q_r)
+        
+        self.q_l = np.radians(np.array([0.0, 0.0, 0.0,
+                                        -0.743, 1.027,
+                                        0.0, 0.662,
+                                        0.0, 0.505, 0.0]).reshape((-1,1)))
+        (self.x_l, self.R_l, _, _) = self.chain_larm.fkin(self.q_l)
 
-        # Initialize the current/starting joint position.
-        self.q  = self.q0
-
-        (self.x, self.R, _, _) = self.chain.fkin(self.q)
         self.lam = 20.0
-        self.lam2 = 3.0
 
         
 
     # Declare the joint names.
-    def jointnames(self):
+    def jointnames(self, tip):
         # Return a list of joint names for atlas_v5.urdf
-        return joint_list
+        return jointnames_dict[tip]
 
     # Evaluate at the given time.  This was last called (dt) ago.
     def evaluate(self, t, dt):
         #if t > 8.0: return None # comment out to run continuously
-        
+        '''
         pd = np.array([0.0, 0.95 - 0.25*np.cos(t), 0.60 + 0.25*sin(t)]).reshape(-1,1)
         vd = np.array([0.0, 0.25*np.sin(t), 0.25*np.cos(t)]).reshape(-1,1)
         Rd = Reye()
@@ -94,7 +96,7 @@ class Trajectory():
         Jwinv = np.transpose(J)@np.linalg.inv(J@np.transpose(J) + (0.2**2)*np.eye(6))
         qdots = self.lam2*np.array([0.0,0.0,0.0,-np.pi/2 - float(self.q[3]),0.0,0.0,0.0]).reshape(-1,1)
         qdot = Jwinv@(xdotd + e*self.lam) + (np.eye(7) - Jwinv@J)@qdots
-        self.q = self.q + qdot*dt
+        self.q = self.q + qdot*dt'''
 
         # Return the position and velocity as python lists.
         return (self.q.flatten().tolist(), qdot.flatten().tolist())

@@ -1,11 +1,11 @@
-"""Launch ME133afinal Atlas simple trajectory
+"""Launch me133a_final viewatlas with joint sliders
 
-   ros2 launch ME133afinal simpletraj.launch.py
+   ros2 launch me133a_final me133a_final_viewatlas.launch.py
 
 This should start
   1) RVIZ, ready to view the robot
   2) The robot_state_publisher to broadcast the robot model
-  3) The simple starting trajectory code to move the joints
+  3) The joint_state_publisher_gui to control atlas with the sliders
 
 """
 
@@ -31,10 +31,10 @@ def generate_launch_description():
     # LOCATE FILES
 
     # Locate the RVIZ configuration file.
-    rvizcfg = os.path.join(pkgdir('ME133afinal'), 'rviz/viewurdf.rviz')
+    rvizcfg = os.path.join(pkgdir('me133a_final'), 'rviz/viewurdf.rviz')
 
     # Locate the URDF file.
-    urdf = os.path.join(pkgdir('ME133afinal'), 'urdf/atlas_v5.urdf')
+    urdf = os.path.join(pkgdir('me133a_final'), 'urdf/atlas_v5.urdf')
 
     # Load the robot's URDF file (XML).
     with open(urdf, 'r') as file:
@@ -62,10 +62,10 @@ def generate_launch_description():
         on_exit    = Shutdown())
     
     # Configure a node for the joint trajectory
-    node_trajectory = Node(
+    node_joint_state_publisher_gui = Node(
         name       = 'trajectory', 
-        package    = 'ME133afinal',
-        executable = 'simple_traj',
+        package    = 'joint_state_publisher_gui',
+        executable = 'joint_state_publisher_gui',
         output     = 'screen')
 
 
@@ -75,5 +75,5 @@ def generate_launch_description():
         # Start the robot_state_publisher, RVIZ, and the trajectory.
         node_robot_state_publisher,
         node_rviz,
-        node_trajectory,
+        node_joint_state_publisher_gui,
     ])
