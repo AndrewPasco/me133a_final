@@ -12,6 +12,8 @@ import numpy as np
 
 from std_msgs.msg import Float64
 
+from scipy.spatial.transform import Rotation as R
+
 from math import pi, sin, cos, acos, atan2, sqrt, fmod, exp
 
 # Grab the utilities
@@ -76,24 +78,28 @@ class Trajectory():
     # Initialization.
     def __init__(self, node):
         # Set up the kinematic chain object.
-        self.chain_rarm = KinematicChain(node, 'pelvis', 'r_hand', self.jointnames())
         self.chain_larm = KinematicChain(node, 'pelvis', 'l_hand', self.jointnames())
+        self.chain_rarm = KinematicChain(node, 'pelvis', 'r_hand', self.jointnames())
 
         # Set up the condition number publisher
         self.pub = node.create_publisher(Float64, '/condition', 10)
 
         # Define the various points and initialize as initial joint/task arrays.
-        self.q_r = np.array([0.0, 0.0, 0.0,
-                             -0.662, 0.0,
-                             -1.027, 0.743,
-                             0.0, -0.505, 0.0]).reshape((-1,1))
-        (self.x_r, self.R_r, _, _) = self.chain_rarm.fkin(self.q_r)
-        
         self.q_l = np.array([0.0, 0.0, 0.0,
                              0.662, 0.0,
                              1.027, -0.743,
                              0.0, 0.505, 0.0]).reshape((-1,1))
+        self.x0_l = np.array([0.30835, 0.40821, 0.78949])
+        self.R0_l = R.from_quat([0.73478, -0.1082, -0.059397, 0.66698]).as_matrix()
         (self.x_l, self.R_l, _, _) = self.chain_larm.fkin(self.q_l)
+        
+        self.q_r = np.array([0.0, 0.0, 0.0,
+                             -0.662, 0.0,
+                             -1.027, 0.743,
+                             0.0, -0.505, 0.0]).reshape((-1,1))
+        self.x0_r = np.array([0.30835,-0.40821, 0.78949]).reshape(-1,1)
+        self.R0_r = R.from_quat([-0.61432, -0.41739, 0.40747, 0.53138]).as_matrix()
+        (self.x_r, self.R_r, _, _) = self.chain_rarm.fkin(self.q_r)
 
         self.lam = 20.0
 
@@ -104,24 +110,47 @@ class Trajectory():
 
     # Evaluate at the given time.  This was last called (dt) ago.
     def evaluate(self, t, dt): # currently just outputs q0 pose, no changes
-        '''
-        pd = np.array([0.0, 0.95 - 0.25*np.cos(t), 0.60 + 0.25*sin(t)]).reshape(-1,1)
-        vd = np.array([0.0, 0.25*np.sin(t), 0.25*np.cos(t)]).reshape(-1,1)
-        Rd = Reye()
-        wd = np.array([0.0,0.0,0.0]).reshape(-1,1)
+        xd_l = np.array([0.30835, 0.40821, 0.4*np.cos(np.pi*(t+0.391)) + 0.5]).reshape(-1,1)
+        vd_l = np.array([0.0, 0.0, -0.4*np.pi*np.sin(np.pi*(t+0.391))]).reshape(-1,1)
+        Rd_l = self.R0_l
+        wd_l = np.array([0.0,0.0,0.0]).reshape(-1,1)
+
+        xd_r = np.array([0.30835, -0.40821, 0.4*np.cos(np.pi*(t+0.391)) + 0.5]).reshape(-1,1)
+        vd_r = np.array([0.0, 0.0, -0.4*np.pi*np.sin(np.pi*(t+0.391))]).reshape(-1,1)
+        Rd_r = self.R0_r
+        wd_r = np.array([0.0,0.0,0.0]).reshape(-1,1)
 
         # ikin
-        (self.x, self.R, Jv, Jw) = self.chain.fkin(self.q)
-        e = np.vstack((ep(pd, self.x), eR(Rd, self.R)))
-        J = np.vstack((Jv, Jw))
-        xdotd = np.vstack((vd, wd))
-        Jwinv = np.transpose(J)@np.linalg.inv(J@np.transpose(J) + (0.2**2)*np.eye(6))
-        qdots = self.lam2*np.array([0.0,0.0,0.0,-np.pi/2 - float(self.q[3]),0.0,0.0,0.0]).reshape(-1,1)
-        qdot = Jwinv@(xdotd + e*self.lam) + (np.eye(7) - Jwinv@J)@qdots
-        self.q = self.q + qdot*dt'''
+        (self.x_l, self.R_l, Jv_l, Jw_l) = self.chain_larm.fkin(self.q_l)
+        e_l = np.vstack((ep(xd_l, self.x_l), eR(Rd_l, self.R_l)))
+        J_l = np.vstack((Jv_l, Jw_l))
+        A = J_l[:,0:3]
+        B = J_l[:,3:]
+        xdotd_l = np.vstack((vd_l, wd_l))
+        
+        (self.x_r, self.R_r, Jv_r, Jw_r) = self.chain_rarm.fkin(self.q_r)
+        e_r = np.vstack((ep(xd_r, self.x_r), eR(Rd_r, self.R_r)))
+        J_r = np.vstack((Jv_r, Jw_r))
+        C = J_r[:,0:3]
+        D = J_r[:,3:]
+        xdotd_r = np.vstack((vd_r, wd_r))
+
+        e = np.vstack((e_l, e_r))
+        J = np.vstack((np.hstack((A, B, np.zeros((6,7)))),np.hstack((C, np.zeros((6,7)), D)))) # see onenote
+        xdotd = np.vstack((xdotd_l, xdotd_r))
+
+        #Jwinv = np.transpose(J)@np.linalg.inv(J@np.transpose(J) + (0.2**2)*np.eye(6))
+        #qdots = self.lam2*np.array([0.0,0.0,0.0,-np.pi/2 - float(self.q[3]),0.0,0.0,0.0]).reshape(-1,1)
+        qdot = np.linalg.pinv(J)@(xdotd + e*self.lam)
+        qdot_l = qdot[0:10]
+        qdot_r = np.concatenate((qdot[0:3],qdot[10:]))
+        self.q_l = self.q_l + qdot_l*dt
+        self.q_r = self.q_r + qdot_r*dt
+
         q = np.vstack((self.q_l, z7, self.q_r[3:], z12))
+        qdot = np.vstack((qdot_l, z7, qdot_r[3:], z12))
         # Return the position and velocity as python lists.
-        return (q.flatten().tolist(), np.zeros(num_joints).reshape(-1,1).flatten().tolist())
+        return (q.flatten().tolist(), qdot.flatten().tolist())
 
 
 #
