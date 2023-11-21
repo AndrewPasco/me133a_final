@@ -109,12 +109,16 @@ class Trajectory():
         return joint_list
 
     # Evaluate at the given time.  This was last called (dt) ago.
-    def evaluate(self, t, dt): # currently just outputs q0 pose, no changes
+    def evaluate(self, t, dt):
+        if t> 0.1: return None
+        
+        # desired trajectory of left hand is moving up and down at constant (x,y)
         xd_l = np.array([0.30835, 0.40821, 0.4*np.cos(np.pi*(t+0.391)) + 0.5]).reshape(-1,1)
         vd_l = np.array([0.0, 0.0, -0.4*np.pi*np.sin(np.pi*(t+0.391))]).reshape(-1,1)
         Rd_l = self.R0_l
         wd_l = np.array([0.0,0.0,0.0]).reshape(-1,1)
 
+        # desired trajectory of right hand is moving up and down at constant (x,y)
         xd_r = np.array([0.30835, -0.40821, 0.4*np.cos(np.pi*(t+0.391)) + 0.5]).reshape(-1,1)
         vd_r = np.array([0.0, 0.0, -0.4*np.pi*np.sin(np.pi*(t+0.391))]).reshape(-1,1)
         Rd_r = self.R0_r
@@ -147,7 +151,7 @@ class Trajectory():
         self.q_l = self.q_l + qdot_l*dt
         self.q_r = self.q_r + qdot_r*dt
 
-        q = np.vstack((self.q_l, z7, self.q_r[3:], z12))
+        q = np.vstack((self.q_l, z7, self.q_r[3:], z12)) # check to make sure non-torso/arm joint values should be zero (or nonzero constant!)?
         qdot = np.vstack((qdot_l, z7, qdot_r[3:], z12))
         # Return the position and velocity as python lists.
         return (q.flatten().tolist(), qdot.flatten().tolist())
