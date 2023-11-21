@@ -24,18 +24,18 @@ from hw5code.TrajectoryUtils    import *
 # Grab the general fkin from HW5 P5.
 from hw5code.KinematicChain     import KinematicChain
 
-# list the joints in same order as atlas_v5.urdf
-joint_list = ['back_bkx', 'back_bky', 'back_bkz',
-              'l_arm_elx', 'l_arm_ely',
-              'l_arm_shx', 'l_arm_shz',
-              'l_arm_wrx', 'l_arm_wry', 'l_arm_wry2',
+# list the joints
+joint_list = ['back_bkz', 'back_bky', 'back_bkx',
+              'l_arm_shz', 'l_arm_shx',
+              'l_arm_ely', 'l_arm_elx',
+              'l_arm_wry', 'l_arm_wrx', 'l_arm_wry2',
               'l_leg_akx', 'l_leg_aky',
               'l_leg_hpx', 'l_leg_hpy', 'l_leg_hpz',
               'l_leg_kny',
               'neck_ry',
-              'r_arm_elx', 'r_arm_ely',
-              'r_arm_shx', 'r_arm_shz',
-              'r_arm_wrx', 'r_arm_wry', 'r_arm_wry2',
+              'r_arm_shz', 'r_arm_shx',
+              'r_arm_ely', 'r_arm_elx',
+              'r_arm_wry', 'r_arm_wrx', 'r_arm_wry2',
               'r_leg_akx', 'r_leg_aky',
               'r_leg_hpx', 'r_leg_hpy', 'r_leg_hpz',
               'r_leg_kny',
@@ -68,6 +68,7 @@ jointnames_dict = {'rhand':joint_list_rhand,
 '''
 num_joints = 36 # total number of atlas joints
 
+z3 = np.zeros(3).reshape(-1,1)
 z7 = np.zeros(7).reshape(-1,1)
 z12 = np.zeros(12).reshape(-1,1)
 
@@ -78,8 +79,8 @@ class Trajectory():
     # Initialization.
     def __init__(self, node):
         # Set up the kinematic chain object.
-        self.chain_larm = KinematicChain(node, 'pelvis', 'l_hand', self.jointnames())
-        self.chain_rarm = KinematicChain(node, 'pelvis', 'r_hand', self.jointnames())
+        self.chain_larm = KinematicChain(node, 'pelvis', 'l_hand', self.jointnames()) # chain from 'utorso' if only want 7dof arm
+        self.chain_rarm = KinematicChain(node, 'pelvis', 'r_hand', self.jointnames()) # chain from 'utorso' if only want 7dof arm
 
         # Set up the condition number publisher
         self.pub = node.create_publisher(Float64, '/condition', 10)
@@ -88,7 +89,7 @@ class Trajectory():
         self.q_l = np.array([0.0, 0.0, 0.0,
                              0.662, 0.0,
                              1.027, -0.743,
-                             0.0, 0.505, 0.0]).reshape((-1,1))
+                             0.0, 0.505, 0.0]).reshape((-1,1)) # list of joint coords chaining from pelvis to hand
         self.x0_l = np.array([0.30835, 0.40821, 0.78949])
         self.R0_l = R.from_quat([0.73478, -0.1082, -0.059397, 0.66698]).as_matrix()
         (self.x_l, self.R_l, _, _) = self.chain_larm.fkin(self.q_l)
@@ -96,7 +97,7 @@ class Trajectory():
         self.q_r = np.array([0.0, 0.0, 0.0,
                              -0.662, 0.0,
                              -1.027, 0.743,
-                             0.0, -0.505, 0.0]).reshape((-1,1))
+                             0.0, -0.505, 0.0]).reshape((-1,1)) # list of joint coords chaining from pelvis to hand
         self.x0_r = np.array([0.30835,-0.40821, 0.78949]).reshape(-1,1)
         self.R0_r = R.from_quat([-0.61432, -0.41739, 0.40747, 0.53138]).as_matrix()
         (self.x_r, self.R_r, _, _) = self.chain_rarm.fkin(self.q_r)
@@ -110,17 +111,16 @@ class Trajectory():
 
     # Evaluate at the given time.  This was last called (dt) ago.
     def evaluate(self, t, dt):
-        if t> 0.1: return None
-        
+
         # desired trajectory of left hand is moving up and down at constant (x,y)
-        xd_l = np.array([0.30835, 0.40821, 0.4*np.cos(np.pi*(t+0.391)) + 0.5]).reshape(-1,1)
-        vd_l = np.array([0.0, 0.0, -0.4*np.pi*np.sin(np.pi*(t+0.391))]).reshape(-1,1)
+        xd_l = np.array([0.30835, 0.40821, 0.2*np.cos(np.pi*(t-0.11)) + 0.6]).reshape(-1,1)
+        vd_l = np.array([0.0, 0.0, -0.2*np.pi*np.sin(np.pi*(t-0.11))]).reshape(-1,1)
         Rd_l = self.R0_l
         wd_l = np.array([0.0,0.0,0.0]).reshape(-1,1)
 
         # desired trajectory of right hand is moving up and down at constant (x,y)
-        xd_r = np.array([0.30835, -0.40821, 0.4*np.cos(np.pi*(t+0.391)) + 0.5]).reshape(-1,1)
-        vd_r = np.array([0.0, 0.0, -0.4*np.pi*np.sin(np.pi*(t+0.391))]).reshape(-1,1)
+        xd_r = np.array([0.30835, -0.40821, 0.2*np.cos(np.pi*(t-0.11)) + 0.6]).reshape(-1,1)
+        vd_r = np.array([0.0, 0.0, -0.2*np.pi*np.sin(np.pi*(t-0.11))]).reshape(-1,1)
         Rd_r = self.R0_r
         wd_r = np.array([0.0,0.0,0.0]).reshape(-1,1)
 
@@ -143,15 +143,14 @@ class Trajectory():
         J = np.vstack((np.hstack((A, B, np.zeros((6,7)))),np.hstack((C, np.zeros((6,7)), D)))) # see onenote
         xdotd = np.vstack((xdotd_l, xdotd_r))
 
-        #Jwinv = np.transpose(J)@np.linalg.inv(J@np.transpose(J) + (0.2**2)*np.eye(6))
-        #qdots = self.lam2*np.array([0.0,0.0,0.0,-np.pi/2 - float(self.q[3]),0.0,0.0,0.0]).reshape(-1,1)
         qdot = np.linalg.pinv(J)@(xdotd + e*self.lam)
         qdot_l = qdot[0:10]
-        qdot_r = np.concatenate((qdot[0:3],qdot[10:]))
+        qdot_r = np.concatenate((qdot[0:3], qdot[10:]))
         self.q_l = self.q_l + qdot_l*dt
         self.q_r = self.q_r + qdot_r*dt
 
-        q = np.vstack((self.q_l, z7, self.q_r[3:], z12)) # check to make sure non-torso/arm joint values should be zero (or nonzero constant!)?
+
+        q = np.vstack((self.q_l, z7, self.q_r[3:], z12)) # important: this q should be same order as joints presented in joint_list above
         qdot = np.vstack((qdot_l, z7, qdot_r[3:], z12))
         # Return the position and velocity as python lists.
         return (q.flatten().tolist(), qdot.flatten().tolist())
