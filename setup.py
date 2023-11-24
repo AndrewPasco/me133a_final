@@ -27,6 +27,7 @@ setup(
     entry_points={
         'console_scripts': [
             'simple_traj = me133a_final.simple_traj:main',
+            'simple_traj_arms = me133a_final.simple_traj_arms:main',
         ],
     },
 )
