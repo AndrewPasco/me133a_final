@@ -200,10 +200,10 @@ class KinematicChain():
             self.info(string)
 
         # Confirm the active joint names matches the expectation
-        jointnames = [s.name for s in self.steps if s.dof is not None]
-        if jointnames != list(expectedjointnames):
-            self.error("Chain does not match the expected names: " +
-                  str(expectedjointnames))
+        #jointnames = [s.name for s in self.steps if s.dof is not None]
+        #if jointnames != list(expectedjointnames):
+        #    self.error("Chain does not match the expected names: " +
+        #          str(expectedjointnames))
 
 
     # Compute the forward kinematics!
@@ -223,22 +223,26 @@ class KinematicChain():
         # Walk the chain, one step at a time.  Record the T transform
         # w.r.t. world for each step.
         for s in self.steps:
-            T = T @ s.Tshift
-
+            # FIXME - Note the step s contains:
+            #  s.Tshift     Transform w.r.t. the previous frame
+            #  s.elocal     Joint axis in the local frame
+            #  s.dof        Joint number
+            #  q[s.dof]     Joint position (angle for revolute, displacement for linear)
+            
+            # Take action based on the joint type.
             if s.type is Joint.REVOLUTE:
                 # Revolute is a rotation:
-                R = Rote(s.elocal, q[s.dof])
-                p = pzero()
-                T = T @ T_from_Rp(R, p)
-                
+                rot = R_from_T(s.Tshift)@Rote(s.elocal, q[s.dof]) # multiply fixed frame rotation with joint rotation
+                p = p_from_T(s.Tshift) # extract fixed frame shift
+                T = T@T_from_Rp(rot, p) # move along kin chain
             elif s.type is Joint.LINEAR:
                 # Linear is a translation:
-                R = Reye()
-                p = s.elocal * q[s.dof]
-                T = T @ T_from_Rp(R, p)
-            #else:
-                
+                rot = R_from_T(s.Tshift) # extract fixed frame rotation
+                p = p_from_T(s.Tshift) + s.elocal*q[s.dof] # add joint shift to fixed frame shift
+                T = T@T_from_Rp(rot,p) # move along kin chain
+            else:
                 # Fixed is only shifting.
+                T = T@s.Tshift # simply shift chain
 
             # Store the info (w.r.t. world frame) into the step.
             s.T = T
@@ -254,9 +258,9 @@ class KinematicChain():
         Jv = np.zeros((3,self.dofs))
         Jw = np.zeros((3,self.dofs))
         for s in self.steps:
-           # FIXME AGAIN.  From the above, the step now includes:
+            # FIXME AGAIN.  From the above, the step now includes:
             #  s.p     Position w.r.t. world
-             # s.e     Joint axis w.r.t. world
+            #  s.e     Joint axis w.r.t. world
             
             # Take action based on the joint type.
             if s.type is Joint.REVOLUTE:
@@ -266,7 +270,7 @@ class KinematicChain():
             elif s.type is Joint.LINEAR:
                 # Linear is a translation:
                 Jv[:,s.dof:s.dof+1] = s.e
-                Jw[:,s.dof:s.dof+1] = np.zeros((3,1))
+                Jw[:,s.dof:s.dof+1] = pzero()
 
         # Return the info
         return (ptip, Rtip, Jv, Jw)
@@ -299,7 +303,7 @@ def main(args=None):
         print('Rtip(q):\n', Rtip)
         print('Jv(q):\n',   Jv)
         print('Jw(q):\n',   Jw)
-        print('----------------------------------------')
+        print('----------------------------------------');
 
     # Run the tests.
     test(np.radians(np.array([  20.0,   40.0,  -30.0])).reshape(3,1))

@@ -24,7 +24,7 @@ from hw5code.TransformHelpers   import *
 from hw5code.TrajectoryUtils    import *
 
 # Grab the general fkin from HW5 P5.
-from KinematicChain     import KinematicChain
+from me133a_final.KinematicChain     import KinematicChain
 
 # list the joints
 joint_list = ['l_arm_wry2', 'l_arm_wrx', 'l_arm_wry',
