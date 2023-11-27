@@ -23,7 +23,7 @@ from hw5code.TransformHelpers   import *
 from hw5code.TrajectoryUtils    import *
 
 # Grab the general fkin from HW5 P5.
-from KinematicChain     import KinematicChain
+from KinematicChain     import *
 
 # list the joints
 joint_list = ['back_bkz', 'back_bky', 'back_bkx',
