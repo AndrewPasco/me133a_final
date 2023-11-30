@@ -18,12 +18,10 @@ from scipy.spatial.transform import Rotation as R
 from math import pi, sin, cos, acos, atan2, sqrt, fmod, exp
 
 # Grab the utilities
-from hw5code.GeneratorNode      import GeneratorNode
-from hw5code.TransformHelpers   import *
-from hw5code.TrajectoryUtils    import *
-
-# Grab the general fkin from HW5 P5.
-from me133a_final.KinematicChain     import KinematicChain
+from me133a_final.utils.GeneratorNode      import GeneratorNode
+from me133a_final.utils.TrajectoryUtils    import *
+from me133a_final.utils.KinematicChain     import KinematicChain
+from me133a_final.utils.TransformHelpers   import *
 
 # list the joints
 joint_list = ['back_bkz', 'back_bky', 'back_bkx',
@@ -111,6 +109,11 @@ class Trajectory():
     # Evaluate at the given time.  This was last called (dt) ago.
     def evaluate(self, t, dt):
 
+        # Compute position/orientation of the pelvis (w.r.t. world).
+        ppelvis = pxyz(0.0, 0.5, 1.5 + 0.5 * np.sin(t/2))
+        #Rpelvis = Rotz(np.sin(self.t)) # maybe have this matching the rotation of the virtual bar? or require atlas to live adjust. tbd.
+        TPELVIS = T_from_Rp(Reye(), ppelvis)
+
         # desired trajectory of left hand is moving up and down at constant (x,y)
         xd_l = np.array([0.30835, 0.40821, 0.2*np.cos(np.pi*(t-0.11)) + 0.6]).reshape(-1,1)
         vd_l = np.array([0.0, 0.0, -0.2*np.pi*np.sin(np.pi*(t-0.11))]).reshape(-1,1)
@@ -148,7 +151,7 @@ class Trajectory():
         q = np.vstack((z3, self.q_l, z7, self.q_r, z12)) # important: this q should be same order as joints presented in joint_list above
         qdot = np.vstack((z3, qdot_l, z7, qdot_r, z12))
         # Return the position and velocity as python lists.
-        return (q.flatten().tolist(), qdot.flatten().tolist())
+        return (q.flatten().tolist(), qdot.flatten().tolist(), TPELVIS)
 
 
 #

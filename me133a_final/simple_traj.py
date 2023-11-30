@@ -17,12 +17,15 @@ from scipy.spatial.transform import Rotation as R
 from math import pi, sin, cos, acos, atan2, sqrt, fmod, exp
 
 # Grab the utilities
-from hw5code.GeneratorNode      import GeneratorNode
-from hw5code.TransformHelpers   import *
-from hw5code.TrajectoryUtils    import *
+from me133a_final.utils.GeneratorNode      import GeneratorNode
+from me133a_final.utils.TrajectoryUtils    import *
 
 # Grab the general fkin from HW5 P5.
-from me133a_final.KinematicChain     import KinematicChain
+from me133a_final.utils.KinematicChain     import KinematicChain
+
+# Move atlas up and down imports
+from geometry_msgs.msg          import TransformStamped
+from me133a_final.utils.TransformHelpers     import *
 
 # list the joints
 joint_list = ['back_bkz', 'back_bky', 'back_bkx',
