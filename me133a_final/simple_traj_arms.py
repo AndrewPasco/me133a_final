@@ -110,7 +110,7 @@ class Trajectory():
     def evaluate(self, t, dt):
 
         # Compute position/orientation of the pelvis (w.r.t. world).
-        ppelvis = pxyz(0.0, 0.5, 1.5 + 0.2*np.cos(np.pi*(t-0.11) - np.pi))
+        ppelvis = pxyz(0.0, 0.5, 1.5 - 0.2*np.cos(np.pi*(t-0.11)))
         #Rpelvis = Rotz(np.sin(self.t)) # maybe have this matching the rotation of the virtual bar? or require atlas to live adjust. tbd.
         TPELVIS = T_from_Rp(Reye(), ppelvis)
 
