@@ -85,18 +85,18 @@ class Trajectory():
         self.pub = node.create_publisher(Float64, '/condition', 10)
 
         # Define the various points and initialize as initial joint/task arrays.
-        self.q_l = np.array([0.662, 0.0,
-                             1.027, -0.743,
-                             0.0, 0.505, 0.0]).reshape((-1,1)) # list of joint coords chaining from pelvis to hand
-        self.x0_l = np.array([0.30835, 0.40821, 0.78949])
-        self.R0_l = R.from_quat([0.73478, -0.1082, -0.059397, 0.66698]).as_matrix()
+        self.q_l = np.array([-1.201, 0.654,
+                             0.0, 1.044,
+                             -0.375, 0.467, 0.0]).reshape((-1,1)) # list of joint coords chaining from utorso to lhand
+        self.x0_l = np.array([0.43408, 0.3441, 0.92362])
+        self.R0_l = R.from_quat([0.62986, -0.6158, -0.34924, 0.31952]).as_matrix()
         (self.x_l, self.R_l, _, _) = self.chain_larm.fkin(self.q_l)
         
-        self.q_r = np.array([-0.662, 0.0,
-                             -1.027, 0.743,
-                             0.0, -0.505, 0.0]).reshape((-1,1)) # list of joint coords chaining from pelvis to hand
-        self.x0_r = np.array([0.30835,-0.40821, 0.78949]).reshape(-1,1)
-        self.R0_r = R.from_quat([-0.61432, -0.41739, 0.40747, 0.53138]).as_matrix()
+        self.q_r = np.array([1.201, -0.654,
+                             0.0, -1.044, 
+                             -0.375, -0.467, 0.0]).reshape((-1,1)) # list of joint coords chaining from utorso to rhand
+        self.x0_r = np.array([0.43408,-0.3441, 0.92362]).reshape(-1,1)
+        self.R0_r = R.from_quat([0.62986, 0.61584, -0.34923, -0.31945]).as_matrix()
         (self.x_r, self.R_r, _, _) = self.chain_rarm.fkin(self.q_r)
 
         self.lam = 20.0
@@ -108,21 +108,21 @@ class Trajectory():
 
     # Evaluate at the given time.  This was last called (dt) ago.
     def evaluate(self, t, dt):
-
+        
         # Compute position/orientation of the pelvis (w.r.t. world).
-        ppelvis = pxyz(0.0, 0.5, 1.5 - 0.2*np.cos(np.pi*(t-0.11)))
+        ppelvis = pxyz(0.0, 0.5, 1.0 - 0.225*np.cos(np.pi*(t)))
         #Rpelvis = Rotz(np.sin(self.t)) # maybe have this matching the rotation of the virtual bar? or require atlas to live adjust. tbd.
         TPELVIS = T_from_Rp(Reye(), ppelvis)
-
+        
         # desired trajectory of left hand is moving up and down at constant (x,y)
-        xd_l = np.array([0.30835, 0.40821, 0.2*np.cos(np.pi*(t-0.11)) + 0.6]).reshape(-1,1)
-        vd_l = np.array([0.0, 0.0, -0.2*np.pi*np.sin(np.pi*(t-0.11))]).reshape(-1,1)
+        xd_l = np.array([0.43408, 0.3441, 0.225*np.cos(np.pi*(t)) + 0.563]).reshape(-1,1)
+        vd_l = np.array([0.0, 0.0, -0.225*np.pi*np.sin(np.pi*(t))]).reshape(-1,1)
         Rd_l = self.R0_l
         wd_l = np.array([0.0,0.0,0.0]).reshape(-1,1)
 
         # desired trajectory of right hand is moving up and down at constant (x,y)
-        xd_r = np.array([0.30835, -0.40821, 0.2*np.cos(np.pi*(t-0.11)) + 0.6]).reshape(-1,1)
-        vd_r = np.array([0.0, 0.0, -0.2*np.pi*np.sin(np.pi*(t-0.11))]).reshape(-1,1)
+        xd_r = np.array([0.43408, -0.3441, 0.225*np.cos(np.pi*(t)) + 0.563]).reshape(-1,1)
+        vd_r = np.array([0.0, 0.0, -0.225*np.pi*np.sin(np.pi*(t))]).reshape(-1,1)
         Rd_r = self.R0_r
         wd_r = np.array([0.0,0.0,0.0]).reshape(-1,1)
 
@@ -146,8 +146,7 @@ class Trajectory():
         qdot_r = qdot[7:]
         self.q_l = self.q_l + qdot_l*dt
         self.q_r = self.q_r + qdot_r*dt
-
-
+        
         q = np.vstack((z3, self.q_l, z7, self.q_r, z12)) # important: this q should be same order as joints presented in joint_list above
         qdot = np.vstack((z3, qdot_l, z7, qdot_r, z12))
         # Return the position and velocity as python lists.
