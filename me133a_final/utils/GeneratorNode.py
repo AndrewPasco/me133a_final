@@ -34,6 +34,9 @@ from geometry_msgs.msg          import TransformStamped
 from tf2_ros                    import TransformBroadcaster
 from rclpy.time                 import Duration
 from me133a_final.utils.TransformHelpers     import *
+from visualization_msgs.msg     import MarkerArray
+from visualization_msgs.msg     import Marker
+from me133a_final.utils.shapes  import *
 
 
 #
@@ -122,7 +125,7 @@ class GeneratorNode(Node):
         if desired is None:
             self.future.set_result("Trajectory has ended")
             return
-        (q, qdot, TPELVIS) = desired
+        (q, qdot, TPELVIS, TLH, TRH) = desired
 
         # Build up and send the Pelvis w.r.t. World Transform!
         trans = TransformStamped()
@@ -131,7 +134,7 @@ class GeneratorNode(Node):
         trans.child_frame_id  = 'pelvis'
         trans.transform       = Transform_from_T(TPELVIS)
         self.broadcaster.sendTransform(trans)
-
+        
         # Check the results.
         if not (isinstance(q, list) and isinstance(qdot, list)):
             self.get_logger().warn("(q) and (qdot) must be python lists!")

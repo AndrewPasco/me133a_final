@@ -206,6 +206,14 @@ def quat_from_R(R):
         q = c*np.array([R[1][0]-R[0][1], R[0][2]+R[2][0], R[2][1]+R[1][2], A])
     return q
 
+def angles_from_quat(quat):
+    q = quat
+    norm2 = np.inner(q,q)
+    q = q/norm2
+    roll = np.arctan2(2*(q[3]*q[0]+q[1]*q[2]),1-2*(q[0]**2+q[1]**2))
+    tilt = -np.pi/2 + 2*np.arctan2(np.sqrt(1+2*(q[3]*q[1]-q[0]*q[2])),np.sqrt(1-2*(q[3]*q[1]-q[0]*q[2])))
+    pan = np.arctan2(2*(q[3]*q[2]+q[1]*q[0]),1-2*(q[2]**2+q[1]**2))
+    return (pan, tilt, roll)
 
 #
 #   URDF <origin> element

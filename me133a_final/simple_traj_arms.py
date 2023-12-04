@@ -91,6 +91,7 @@ class Trajectory():
         self.x0_l = np.array([0.43408, 0.3441, 0.92362])
         self.R0_l = R.from_quat([0.62986, -0.6158, -0.34924, 0.31952]).as_matrix()
         (self.x_l, self.R_l, _, _) = self.chain_larm.fkin(self.q_l)
+        self.T_l = T_from_Rp(self.R_l, self.x_l)
         
         self.q_r = np.array([1.201, -0.654,
                              0.0, -1.044, 
@@ -98,6 +99,7 @@ class Trajectory():
         self.x0_r = np.array([0.43408,-0.3441, 0.92362]).reshape(-1,1)
         self.R0_r = R.from_quat([0.62986, 0.61584, -0.34923, -0.31945]).as_matrix()
         (self.x_r, self.R_r, _, _) = self.chain_rarm.fkin(self.q_r)
+        self.T_r = T_from_Rp(self.R_r, self.x_r)
 
         self.lam = 20.0
 
@@ -115,24 +117,26 @@ class Trajectory():
         TPELVIS = T_from_Rp(Reye(), ppelvis)
         
         # desired trajectory of left hand is moving up and down at constant (x,y)
-        xd_l = np.array([0.43408, 0.3441, 0.225*np.cos(np.pi*(t)) + 0.563]).reshape(-1,1)
+        xd_l = np.array([float(self.x0_l[0]), float(self.x0_l[1]), 0.225*np.cos(np.pi*(t)) + 0.563]).reshape(-1,1)
         vd_l = np.array([0.0, 0.0, -0.225*np.pi*np.sin(np.pi*(t))]).reshape(-1,1)
         Rd_l = self.R0_l
         wd_l = np.array([0.0,0.0,0.0]).reshape(-1,1)
 
         # desired trajectory of right hand is moving up and down at constant (x,y)
-        xd_r = np.array([0.43408, -0.3441, 0.225*np.cos(np.pi*(t)) + 0.563]).reshape(-1,1)
+        xd_r = np.array([float(self.x0_r[0]), float(self.x0_r[1]), 0.225*np.cos(np.pi*(t)) + 0.563]).reshape(-1,1)
         vd_r = np.array([0.0, 0.0, -0.225*np.pi*np.sin(np.pi*(t))]).reshape(-1,1)
         Rd_r = self.R0_r
         wd_r = np.array([0.0,0.0,0.0]).reshape(-1,1)
 
         # ikin
         (self.x_l, self.R_l, Jv_l, Jw_l) = self.chain_larm.fkin(self.q_l)
+        self.T_l = T_from_Rp(self.R_l, self.x_l)
         e_l = np.vstack((ep(xd_l, self.x_l), eR(Rd_l, self.R_l)))
         J_l = np.vstack((Jv_l, Jw_l))
         xdotd_l = np.vstack((vd_l, wd_l))
         
         (self.x_r, self.R_r, Jv_r, Jw_r) = self.chain_rarm.fkin(self.q_r)
+        self.T_r = T_from_Rp(self.R_r, self.x_r)
         e_r = np.vstack((ep(xd_r, self.x_r), eR(Rd_r, self.R_r)))
         J_r = np.vstack((Jv_r, Jw_r))
         xdotd_r = np.vstack((vd_r, wd_r))
@@ -150,7 +154,7 @@ class Trajectory():
         q = np.vstack((z3, self.q_l, z7, self.q_r, z12)) # important: this q should be same order as joints presented in joint_list above
         qdot = np.vstack((z3, qdot_l, z7, qdot_r, z12))
         # Return the position and velocity as python lists.
-        return (q.flatten().tolist(), qdot.flatten().tolist(), TPELVIS)
+        return (q.flatten().tolist(), qdot.flatten().tolist(), TPELVIS, self.T_l, self.T_r)
 
 
 #

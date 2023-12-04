@@ -1,13 +1,4 @@
-"""Launch me133a_final Atlas simple trajectory with only arms
-
-   ros2 launch me133a_final simple_traj_arms.launch.py
-
-This should start
-  1) RVIZ, ready to view the robot
-  2) The robot_state_publisher to broadcast the robot model
-  3) The simple starting trajectory code to move the joints
-  4) The bar node and GUI
-
+"""
 """
 
 import os
@@ -45,14 +36,6 @@ def generate_launch_description():
     ######################################################################
     # PREPARE THE LAUNCH ELEMENTS
 
-    # Configure a node for the robot_state_publisher.
-    node_robot_state_publisher = Node(
-        name       = 'robot_state_publisher', 
-        package    = 'robot_state_publisher',
-        executable = 'robot_state_publisher',
-        output     = 'screen',
-        parameters = [{'robot_description': robot_description}])
-
     # Configure a node for RVIZ
     node_rviz = Node(
         name       = 'rviz', 
@@ -61,13 +44,6 @@ def generate_launch_description():
         output     = 'screen',
         arguments  = ['-d', rvizcfg],
         on_exit    = Shutdown())
-    
-    # Configure a node for the joint trajectory
-    node_trajectory = Node(
-        name       = 'trajectory', 
-        package    = 'me133a_final',
-        executable = 'simple_traj_arms',
-        output     = 'screen')
     
     # Configure a node for the point_publisher.
     node_bar = Node(
@@ -82,8 +58,6 @@ def generate_launch_description():
     # RETURN THE ELEMENTS IN ONE LIST
     return LaunchDescription([
         # Start the robot_state_publisher, RVIZ, and the trajectory.
-        node_robot_state_publisher,
         node_rviz,
-        node_trajectory,
         node_bar,
     ])
