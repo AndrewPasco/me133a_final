@@ -189,6 +189,7 @@ def R_from_quat(quat):
     return R
 
 def quat_from_R(R):
+    # return [qw, qx, qy, qz]
     A = [1.0 + R[0][0] + R[1][1] + R[2][2],
          1.0 + R[0][0] - R[1][1] - R[2][2],
          1.0 - R[0][0] + R[1][1] - R[2][2],
@@ -207,12 +208,24 @@ def quat_from_R(R):
     return q
 
 def angles_from_quat(quat):
+    # quat passed as [qw, qx, qy, qz]
     q = quat
     norm2 = np.inner(q,q)
     q = q/norm2
-    roll = np.arctan2(2*(q[3]*q[0]+q[1]*q[2]),1-2*(q[0]**2+q[1]**2))
-    tilt = -np.pi/2 + 2*np.arctan2(np.sqrt(1+2*(q[3]*q[1]-q[0]*q[2])),np.sqrt(1-2*(q[3]*q[1]-q[0]*q[2])))
-    pan = np.arctan2(2*(q[3]*q[2]+q[1]*q[0]),1-2*(q[2]**2+q[1]**2))
+    '''if q[1]*q[2] + q[3]*q[0] > 0.499: # need to fix this to handle pitch singularity?
+        print('if')
+        pan = 2 * np.atan2(q[2], q[1])
+        tilt = np.pi/2
+        roll = 0
+    elif q[2]*q[3] + q[0]*q[1] < -0.499:
+        print('elif')
+        pan = -2 * np.atan2(q[2], q[1])
+        tilt = -np.pi/2
+        roll = 0'''
+    #else:
+    roll = np.arctan2(2*(q[0]*q[1]+q[2]*q[3]),1-2*(q[1]**2+q[2]**2))
+    tilt = 2*np.arctan2(np.sqrt(1+2*(q[0]*q[2]-q[1]*q[3])),np.sqrt(1-2*(q[0]*q[2]-q[1]*q[3])))
+    pan = np.arctan2(2*(q[0]*q[3]+q[2]*q[1]),1-2*(q[3]**2+q[2]**2))
     return (pan, tilt, roll)
 
 #

@@ -14,7 +14,7 @@ from me133a_final.utils.shapes import *
 def main(args=None):
     # Initialize ROS and the GUI node (10Hz).
     rclpy.init(args=args)
-    bar_quat = quat_from_R(Rotz(np.pi/2))
+    bar_quat = quat_from_R(Rotx(np.pi/2))
     print(bar_quat)
     node = GUINode('bar', bar_quat, 10) # fixme with correct initial orientation
 

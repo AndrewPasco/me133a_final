@@ -87,33 +87,27 @@ class PanTiltGUI(QWidget):
         super().__init__()
         self.value    = q0
         self.callback = callback
-        self.initUI(q0)
+        (self.pan, self.tilt, _) = angles_from_quat(self.value)
+        self.initUI(self.value)
 
     def initUI(self, q):
         # Create the Pan/tilt variables
-        (pan, tilt, _) = angles_from_quat(q)
-        print(pan)
-        print(tilt)
         vbox = QVBoxLayout()
-        vbox.addWidget(SingleVariable('Pan', pan, -2.0, 2.0, self.panHandler))
-        vbox.addWidget(SingleVariable('Tilt', tilt, -2.0, 2.0, self.tiltHandler))
+        vbox.addWidget(SingleVariable('Pan', self.pan, -np.pi/4, np.pi/4, self.panHandler))
+        vbox.addWidget(SingleVariable('Tilt', self.tilt - np.pi/2, -np.pi/4, np.pi/4, self.tiltHandler))
 
         self.setLayout(vbox)
         self.setWindowTitle('Pan/Tilt')
         self.show()
 
     def panHandler(self, value):
-        Rpan = Rotz(value)
-        R_old = R_from_quat(np.array(self.value))
-        q_new = quat_from_R(R_old@Rpan)
-        self.value = q_new
+        self.pan = value
+        self.value = quat_from_R(Rotx(self.tilt)@Roty(self.pan))
         self.callback(self.value)
 
     def tiltHandler(self, value):
-        Rtilt = Rotx(value)
-        R_old = R_from_quat(np.array(self.value))
-        q_new = quat_from_R(R_old@Rtilt)
-        self.value = q_new
+        self.tilt = value + np.pi/2
+        self.value = quat_from_R(Rotx(self.tilt)@Roty(self.pan))
         self.callback(self.value)
 
     def kill(self, signum, frame):
@@ -270,10 +264,10 @@ class GUINode(Node):
     # Get/Set the value.
     def getvalue(self):
         # Get the value.
-        return [self.bar_q.x, self.bar_q.y, self.bar_q.z, self.bar_q.w]
+        return [self.bar_q.w, self.bar_q.x, self.bar_q.y, self.bar_q.z]
     def setvalue(self, value):
         # Set the value.
-        self.bar_q.x = value[3]
-        self.bar_q.y = value[0]
-        self.bar_q.z = value[1]
-        self.bar_q.w = value[2]
+        self.bar_q.x = value[1]
+        self.bar_q.y = value[2]
+        self.bar_q.z = value[3]
+        self.bar_q.w = value[0]
