@@ -94,7 +94,7 @@ class PanTiltGUI(QWidget):
         # Create the Pan/tilt variables
         vbox = QVBoxLayout()
         vbox.addWidget(SingleVariable('Pan', self.pan, -np.pi/4, np.pi/4, self.panHandler))
-        vbox.addWidget(SingleVariable('Tilt', self.tilt - np.pi/2, -np.pi/4, np.pi/4, self.tiltHandler))
+        vbox.addWidget(SingleVariable('Tilt', self.tilt - np.pi/2, -np.pi/8, np.pi/8, self.tiltHandler))
 
         self.setLayout(vbox)
         self.setWindowTitle('Pan/Tilt')

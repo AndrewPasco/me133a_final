@@ -11,7 +11,7 @@
 import rclpy
 import numpy as np
 
-from std_msgs.msg import Float64
+from geometry_msgs.msg import Quaternion, QuaternionStamped
 
 from scipy.spatial.transform import Rotation as R
 
@@ -81,14 +81,16 @@ class Trajectory():
         self.chain_larm = KinematicChain(node, 'utorso', 'l_hand', self.jointnames()) # chain from 'utorso' if only want 7dof arm
         self.chain_rarm = KinematicChain(node, 'utorso', 'r_hand', self.jointnames()) # chain from 'utorso' if only want 7dof arm
 
-        # Set up the condition number publisher
-        self.pub = node.create_publisher(Float64, '/condition', 10)
+        # Set up the bar quaternion subscriber
+        self.bar_quat_sub = node.create_subscription(QuaternionStamped, '/bar_quat', self.readBar, 10)
 
         # Define the various points and initialize as initial joint/task arrays.
+        self.L = 0.688 # distance between hands
+        
         self.q_l = np.array([-1.201, 0.654,
                              0.0, 1.044,
                              -0.375, 0.467, 0.0]).reshape((-1,1)) # list of joint coords chaining from utorso to lhand
-        self.x0_l = np.array([0.43408, 0.3441, 0.92362])
+        self.x0_l = np.array([0.43408, self.L/2, 0.92362])
         self.R0_l = R.from_quat([0.62986, -0.6158, -0.34924, 0.31952]).as_matrix()
         (self.x_l, self.R_l, _, _) = self.chain_larm.fkin(self.q_l)
         self.T_l = T_from_Rp(self.R_l, self.x_l)
@@ -96,12 +98,24 @@ class Trajectory():
         self.q_r = np.array([1.201, -0.654,
                              0.0, -1.044, 
                              -0.375, -0.467, 0.0]).reshape((-1,1)) # list of joint coords chaining from utorso to rhand
-        self.x0_r = np.array([0.43408,-0.3441, 0.92362]).reshape(-1,1)
+        self.x0_r = np.array([0.43408,-self.L/2, 0.92362]).reshape(-1,1)
         self.R0_r = R.from_quat([0.62986, 0.61584, -0.34923, -0.31945]).as_matrix()
         (self.x_r, self.R_r, _, _) = self.chain_rarm.fkin(self.q_r)
         self.T_r = T_from_Rp(self.R_r, self.x_r)
 
+        # Initialize the bar angles as 0 (standard config)
+        self.pan= 0.0
+        self.tilt = 0.0
+
         self.lam = 20.0
+
+    def readBar(self, bar_quat_msg):
+        # read in and save published bar orientation quaternion
+        bar_q = bar_quat_msg.quaternion # unpack ROS Quaternion from QuaterionStamped msg
+        q = quat_from_Quaternion(bar_q) # extract q from ROS object
+        print(q)
+        (self.pan, tilt, _) = angles_from_quat(q.flatten().tolist())
+        self.tilt = tilt - np.pi/2
 
     # Declare the joint names.
     def jointnames(self):
@@ -110,20 +124,26 @@ class Trajectory():
 
     # Evaluate at the given time.  This was last called (dt) ago.
     def evaluate(self, t, dt):
-        
+        sz = 0.225*np.cos(np.pi*(t)) # path variable for z
+
         # Compute position/orientation of the pelvis (w.r.t. world).
-        ppelvis = pxyz(0.0, 0.5, 1.0 - 0.225*np.cos(np.pi*(t)))
-        #Rpelvis = Rotz(np.sin(self.t)) # maybe have this matching the rotation of the virtual bar? or require atlas to live adjust. tbd.
-        TPELVIS = T_from_Rp(Reye(), ppelvis)
+        ppelvis = pxyz(0.0, 0.5, 1.0 - sz)
+        Rpelvis = Rotz(self.pan)
+        TPELVIS = T_from_Rp(Rpelvis, ppelvis)
         
+        # compute additional offset needed from bar tilt to keep hands on bar
+        tilt_compensate = self.L/2 * np.sin(self.tilt)
+
         # desired trajectory of left hand is moving up and down at constant (x,y)
-        xd_l = np.array([float(self.x0_l[0]), float(self.x0_l[1]), 0.225*np.cos(np.pi*(t)) + 0.563]).reshape(-1,1)
+        # TODO: consider tilt angle in z-trajectory of hand
+        xd_l = np.array([float(self.x0_l[0]), float(self.x0_l[1]), sz + 0.563 + tilt_compensate]).reshape(-1,1)
         vd_l = np.array([0.0, 0.0, -0.225*np.pi*np.sin(np.pi*(t))]).reshape(-1,1)
         Rd_l = self.R0_l
         wd_l = np.array([0.0,0.0,0.0]).reshape(-1,1)
 
         # desired trajectory of right hand is moving up and down at constant (x,y)
-        xd_r = np.array([float(self.x0_r[0]), float(self.x0_r[1]), 0.225*np.cos(np.pi*(t)) + 0.563]).reshape(-1,1)
+        # TODO: consider tilt angle in z-trajectory of hand
+        xd_r = np.array([float(self.x0_r[0]), float(self.x0_r[1]), sz + 0.563 - tilt_compensate]).reshape(-1,1)
         vd_r = np.array([0.0, 0.0, -0.225*np.pi*np.sin(np.pi*(t))]).reshape(-1,1)
         Rd_r = self.R0_r
         wd_r = np.array([0.0,0.0,0.0]).reshape(-1,1)
@@ -145,7 +165,10 @@ class Trajectory():
         J = np.vstack((np.hstack((J_l, np.zeros((6,7)))),np.hstack((np.zeros((6,7)), J_r)))) # see onenote
         xdotd = np.vstack((xdotd_l, xdotd_r))
 
-        qdot = np.linalg.pinv(J)@(xdotd + e*self.lam)
+        
+        Jwinv = np.transpose(J)@np.linalg.inv(J@np.transpose(J) + (0.05**2)*np.eye(12)) # implement weighted inverse to help near singularities
+
+        qdot = Jwinv@(xdotd + e*self.lam)
         qdot_l = qdot[0:7]
         qdot_r = qdot[7:]
         self.q_l = self.q_l + qdot_l*dt
