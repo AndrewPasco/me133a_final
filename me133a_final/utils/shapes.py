@@ -158,7 +158,7 @@ class GUINode(Node):
         self.marker.pose.orientation.y = self.bar_q.y
         self.marker.pose.orientation.z = self.bar_q.z
         self.marker.pose.orientation.w = self.bar_q.w
-        self.marker.pose.position      = Point_from_p(pxyz(0.434 - 0.1,0.5,1.78 + 0.1)) # fixme to be the correct location
+        self.marker.pose.position      = Point_from_p(pxyz(-.012 - 0.1,0.0,1.96 + 0.1)) # fixme to be the correct location
         self.marker.scale.x            = 0.05 # fixme
         self.marker.scale.y            = 0.05 # fixme
         self.marker.scale.z            = 1.0 # fixme
@@ -244,7 +244,7 @@ class GUINode(Node):
         self.marker.pose.orientation.y = self.bar_q.y
         self.marker.pose.orientation.z = self.bar_q.z
         self.marker.pose.orientation.w = self.bar_q.w
-        self.marker.pose.position      = Point_from_p(pxyz(0.434 - 0.1,0.5,1.78 + 0.1)) # fixme to be the correct location
+        self.marker.pose.position      = Point_from_p(pxyz(-.012 - 0.1,0.0,1.96 + 0.1)) # fixme to be the correct location
         self.marker.scale.x            = 0.05 # fixme
         self.marker.scale.y            = 0.05 # fixme
         self.marker.scale.z            = 1.0  # fixme

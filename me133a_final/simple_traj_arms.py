@@ -125,11 +125,6 @@ class Trajectory():
     # Evaluate at the given time.  This was last called (dt) ago.
     def evaluate(self, t, dt):
         sz = 0.225*np.cos(np.pi*(t)) # path variable for z
-
-        # Compute position/orientation of the pelvis (w.r.t. world).
-        ppelvis = pxyz(0.0, 0.5, 1.0 - sz)
-        Rpelvis = Rotz(self.pan)
-        TPELVIS = T_from_Rp(Rpelvis, ppelvis)
         
         # compute additional offset needed from bar tilt to keep hands on bar
         tilt_compensate = self.L/2 * np.sin(self.tilt)
@@ -165,6 +160,11 @@ class Trajectory():
         J = np.vstack((np.hstack((J_l, np.zeros((6,7)))),np.hstack((np.zeros((6,7)), J_r)))) # see onenote
         xdotd = np.vstack((xdotd_l, xdotd_r))
 
+        # Compute position/orientation of the pelvis (w.r.t. world).
+        xavg = (self.x_l + self.x_r) / 2
+        ppelvis = pxyz(0.0, 0.0, 1.75) - xavg
+        Rpelvis = Rotz(self.pan)
+        TPELVIS = T_from_Rp(Rpelvis, ppelvis)
         
         Jwinv = np.transpose(J)@np.linalg.inv(J@np.transpose(J) + (0.05**2)*np.eye(12)) # implement weighted inverse to help near singularities
 
