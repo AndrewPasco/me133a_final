@@ -92,7 +92,7 @@ class Trajectory():
         self.q_l = np.array([-1.201, 0.654,
                              0.0, 1.044,
                              -0.375, 0.467, 0.0]).reshape((-1,1)) # list of joint coords chaining from utorso to lhand
-        self.x0_l = np.array([0.43408, self.L/2, 0.92362])
+        self.x0_l = np.array([0.42208, self.L/2, 0.92362])
         self.R0_l = R.from_quat([0.62986, -0.6158, -0.34924, 0.31952]).as_matrix()
         (self.x_l, self.R_l, _, _) = self.chain_larm.fkin(self.q_l)
         self.T_l = T_from_Rp(self.R_l, self.x_l)
@@ -100,7 +100,7 @@ class Trajectory():
         self.q_r = np.array([1.201, -0.654,
                              0.0, -1.044, 
                              -0.375, -0.467, 0.0]).reshape((-1,1)) # list of joint coords chaining from utorso to rhand
-        self.x0_r = np.array([0.43408,-self.L/2, 0.92362]).reshape(-1,1)
+        self.x0_r = np.array([0.42208,-self.L/2, 0.92362]).reshape(-1,1)
         self.R0_r = R.from_quat([0.62986, 0.61584, -0.34923, -0.31945]).as_matrix()
         (self.x_r, self.R_r, _, _) = self.chain_rarm.fkin(self.q_r)
         self.T_r = T_from_Rp(self.R_r, self.x_r)
@@ -164,7 +164,11 @@ class Trajectory():
 
         # Compute position/orientation of the pelvis (w.r.t. world).
         xavg = (self.x_l + self.x_r) / 2
-        ppelvis = pxyz(0.0, 0.0, 1.75) - xavg
+        norm2 = np.sqrt(xavg[0]**2 + xavg[1]**2)
+        pan_compensate = np.array([norm2*np.cos(self.pan),
+                                   norm2*np.sin(self.pan),
+                                   xavg[2]])
+        ppelvis = pxyz(0.0, 0.0, 1.75) - pan_compensate
         Rpelvis = Rotz(self.pan)
         TPELVIS = T_from_Rp(Rpelvis, ppelvis)
         
