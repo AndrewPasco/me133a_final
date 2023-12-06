@@ -28,6 +28,7 @@ joint_list = ['back_bkz', 'back_bky', 'back_bkx',
               'l_arm_shz', 'l_arm_shx',
               'l_arm_ely', 'l_arm_elx',
               'l_arm_wry', 'l_arm_wrx', 'l_arm_wry2',
+              'l_arm_tip',
               'l_leg_akx', 'l_leg_aky',
               'l_leg_hpx', 'l_leg_hpy', 'l_leg_hpz',
               'l_leg_kny',
@@ -35,6 +36,7 @@ joint_list = ['back_bkz', 'back_bky', 'back_bkx',
               'r_arm_shz', 'r_arm_shx',
               'r_arm_ely', 'r_arm_elx',
               'r_arm_wry', 'r_arm_wrx', 'r_arm_wry2',
+              'r_arm_tip',
               'r_leg_akx', 'r_leg_aky',
               'r_leg_hpx', 'r_leg_hpy', 'r_leg_hpz',
               'r_leg_kny',
@@ -68,8 +70,8 @@ jointnames_dict = {'rhand':joint_list_rhand,
 num_joints = 36 # total number of atlas joints
 
 z3 = np.zeros(3).reshape(-1,1)
-z7 = np.zeros(7).reshape(-1,1)
-z12 = np.zeros(12).reshape(-1,1)
+z8 = np.zeros(8).reshape(-1,1)
+z13 = np.zeros(13).reshape(-1,1)
 
 #
 #   Trajectory Class
@@ -78,8 +80,8 @@ class Trajectory():
     # Initialization.
     def __init__(self, node):
         # Set up the kinematic chain object.
-        self.chain_larm = KinematicChain(node, 'utorso', 'l_hand', self.jointnames()) # chain from 'utorso' if only want 7dof arm
-        self.chain_rarm = KinematicChain(node, 'utorso', 'r_hand', self.jointnames()) # chain from 'utorso' if only want 7dof arm
+        self.chain_larm = KinematicChain(node, 'utorso', 'l_hand_tip', self.jointnames())
+        self.chain_rarm = KinematicChain(node, 'utorso', 'r_hand_tip', self.jointnames())
 
         # Set up the bar quaternion subscriber
         self.bar_quat_sub = node.create_subscription(QuaternionStamped, '/bar_quat', self.readBar, 10)
@@ -174,8 +176,8 @@ class Trajectory():
         self.q_l = self.q_l + qdot_l*dt
         self.q_r = self.q_r + qdot_r*dt
         
-        q = np.vstack((z3, self.q_l, z7, self.q_r, z12)) # important: this q should be same order as joints presented in joint_list above
-        qdot = np.vstack((z3, qdot_l, z7, qdot_r, z12))
+        q = np.vstack((z3, self.q_l, z8, self.q_r, z13)) # important: this q should be same order as joints presented in joint_list above
+        qdot = np.vstack((z3, qdot_l, z8, qdot_r, z13))
         # Return the position and velocity as python lists.
         return (q.flatten().tolist(), qdot.flatten().tolist(), TPELVIS, self.T_l, self.T_r)
 

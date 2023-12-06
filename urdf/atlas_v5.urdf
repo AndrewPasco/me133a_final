@@ -15,12 +15,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_clav.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_clav.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_clav.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_clav.dae"/>
       </geometry>
     </collision>
   </link>
@@ -32,12 +32,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_foot.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_foot.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_foot.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_foot.dae"/>
       </geometry>
     </collision>
   </link>
@@ -47,7 +47,19 @@
       <origin rpy="0 0 0" xyz="0 0.06 0"/>
       <inertia ixx="0.00265" ixy="0" ixz="0" iyy="0.00446" iyz="0" izz="0.00446"/>
     </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_hand.dae"/>
+      </geometry>
+    </visual>
   </link>
+  <link name="l_hand_tip">
+    <inertial>
+      <mass value="0.01"/>
+      <origin rpy="0 0 0" xyz="0 0.1 0"/>
+      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+    </inertial> 
+  </link> 
   <link name="l_larm">
     <inertial>
       <mass value="2.509"/>
@@ -56,12 +68,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_larm.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_larm.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_larm.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_larm.dae"/>
       </geometry>
     </collision>
   </link>
@@ -71,14 +83,14 @@
       <origin rpy="0 0 0" xyz="0 -0.07 0"/>
       <inertia ixx="0.007" ixy="0" ixz="0" iyy="0.004" iyz="0" izz="0.007"/>
     </inertial>
-    <visual>
+    <!--<visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_hand.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_hand.dae"/>
       </geometry>
-    </visual>
+    </visual>-->
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_hand.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_hand.dae"/>
       </geometry>
     </collision>
   </link>
@@ -90,12 +102,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_lglut.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_lglut.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_lglut.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_lglut.dae"/>
       </geometry>
     </collision>
   </link>
@@ -107,12 +119,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_lleg.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_lleg.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_lleg.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_lleg.dae"/>
       </geometry>
     </collision>
   </link>
@@ -124,12 +136,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_scap.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_scap.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_scap.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_scap.dae"/>
       </geometry>
     </collision>
   </link>
@@ -141,12 +153,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_talus.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_talus.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_talus.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_talus.dae"/>
       </geometry>
     </collision>
   </link>
@@ -158,12 +170,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_uarm.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_uarm.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_uarm.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_uarm.dae"/>
       </geometry>
     </collision>
   </link>
@@ -175,12 +187,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_farm.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_farm.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_farm.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_farm.dae"/>
       </geometry>
     </collision>
   </link>
@@ -192,12 +204,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_uglut.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_uglut.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_uglut.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_uglut.dae"/>
       </geometry>
     </collision>
   </link>
@@ -209,12 +221,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_uleg.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_uleg.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/l_uleg.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/l_uleg.dae"/>
       </geometry>
     </collision>
   </link>
@@ -226,12 +238,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/ltorso.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/ltorso.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/ltorso.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/ltorso.dae"/>
       </geometry>
     </collision>
   </link>
@@ -243,12 +255,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/mtorso.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/mtorso.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/mtorso.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/mtorso.dae"/>
       </geometry>
     </collision>
   </link>
@@ -260,12 +272,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/pelvis.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/pelvis.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/pelvis.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/pelvis.dae"/>
       </geometry>
     </collision>
   </link>
@@ -277,12 +289,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_clav.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_clav.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_clav.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_clav.dae"/>
       </geometry>
     </collision>
   </link>
@@ -294,12 +306,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_foot.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_foot.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_foot.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_foot.dae"/>
       </geometry>
     </collision>
   </link>
@@ -309,7 +321,19 @@
       <origin rpy="0 0 0" xyz="0 -0.06 0"/>
       <inertia ixx="0.00265" ixy="0" ixz="0" iyy="0.00446" iyz="0" izz="0.00446"/>
     </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_hand.dae"/>
+      </geometry>
+    </visual>
   </link>
+  <link name="r_hand_tip">
+    <inertial>
+      <mass value="0.01"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+    </inertial> 
+  </link> 
   <link name="r_larm">
     <inertial>
       <mass value="2.509"/>
@@ -318,12 +342,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_larm.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_larm.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_larm.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_larm.dae"/>
       </geometry>
     </collision>
   </link>
@@ -333,14 +357,9 @@
       <origin rpy="0 0 0" xyz="0 0.07 0"/>
       <inertia ixx="0.007" ixy="0" ixz="0" iyy="0.004" iyz="0" izz="0.007"/>
     </inertial>
-    <visual>
-      <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_hand.dae"/>
-      </geometry>
-    </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_hand.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_hand.dae"/>
       </geometry>
     </collision>
   </link>
@@ -352,12 +371,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_lglut.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_lglut.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_lglut.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_lglut.dae"/>
       </geometry>
     </collision>
   </link>
@@ -369,12 +388,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_lleg.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_lleg.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_lleg.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_lleg.dae"/>
       </geometry>
     </collision>
   </link>
@@ -386,12 +405,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_scap.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_scap.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_scap.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_scap.dae"/>
       </geometry>
     </collision>
   </link>
@@ -403,12 +422,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_talus.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_talus.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_talus.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_talus.dae"/>
       </geometry>
     </collision>
   </link>
@@ -420,12 +439,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_uarm.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_uarm.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_uarm.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_uarm.dae"/>
       </geometry>
     </collision>
   </link>
@@ -437,12 +456,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_farm.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_farm.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_farm.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_farm.dae"/>
       </geometry>
     </collision>
   </link>
@@ -454,12 +473,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_uglut.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_uglut.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_uglut.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_uglut.dae"/>
       </geometry>
     </collision>
   </link>
@@ -471,12 +490,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_uleg.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_uleg.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/r_uleg.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/r_uleg.dae"/>
       </geometry>
     </collision>
   </link>
@@ -488,12 +507,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/utorso.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/utorso.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://me133a_final/meshes_unplugged/utorso.dae"/>
+        <mesh filename="package://atlas_description/meshes_unplugged/utorso.dae"/>
       </geometry>
     </collision>
   </link>
@@ -560,6 +579,11 @@
     <limit effort="87" lower="-1.5708" upper="0.785398" velocity="12"/>
     <safety_controller k_position="100" k_velocity="100" soft_lower_limit="-11.5708" soft_upper_limit="10.7854"/>
   </joint>
+  <joint name="l_arm_tip" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0.1 0"/>
+    <parent link="l_hand"/>
+    <child link="l_hand_tip"/>
+  </joint>
   <joint name="l_arm_wrx" type="revolute">
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <axis xyz="1 0 0"/>
@@ -579,7 +603,7 @@
     <safety_controller k_position="100" k_velocity="100" soft_lower_limit="-13.011" soft_upper_limit="13.011"/>
   </joint>
   <joint name="l_arm_wry2" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0 0.141"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
     <axis xyz="0 1 0"/>
     <parent link="l_lfarm"/>
     <child link="l_hand"/>
@@ -686,6 +710,11 @@
     <limit effort="87" lower="-0.785398" upper="1.5708" velocity="12"/>
     <safety_controller k_position="100" k_velocity="100" soft_lower_limit="-10.7854" soft_upper_limit="11.5708"/>
   </joint>
+  <joint name="r_arm_tip" type="fixed">
+    <origin rpy="0 0 0" xyz="0 -0.1 0"/>
+    <parent link="r_hand"/>
+    <child link="r_hand_tip"/>
+  </joint>
   <joint name="r_arm_wrx" type="revolute">
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <axis xyz="1 0 0"/>
@@ -705,7 +734,7 @@
     <safety_controller k_position="100" k_velocity="100" soft_lower_limit="-13.011" soft_upper_limit="13.011"/>
   </joint>
   <joint name="r_arm_wry2" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0 0.141"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
     <axis xyz="0 1 0"/>
     <parent link="r_lfarm"/>
     <child link="r_hand"/>
