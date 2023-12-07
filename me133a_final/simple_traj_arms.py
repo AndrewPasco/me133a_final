@@ -11,7 +11,8 @@
 import rclpy
 import numpy as np
 
-from geometry_msgs.msg import Quaternion, QuaternionStamped
+from std_msgs.msg import Float64MultiArray
+from geometry_msgs.msg import QuaternionStamped
 
 from scipy.spatial.transform import Rotation as R
 
@@ -83,8 +84,9 @@ class Trajectory():
         self.chain_larm = KinematicChain(node, 'utorso', 'l_hand_tip', self.jointnames())
         self.chain_rarm = KinematicChain(node, 'utorso', 'r_hand_tip', self.jointnames())
 
-        # Set up the bar quaternion subscriber
-        self.bar_quat_sub = node.create_subscription(QuaternionStamped, '/bar_quat', self.readBar, 10)
+        # Set up the bar angle array subscriber
+        self.bar_angle_sub = node.create_subscription(Float64MultiArray, '/bar_angles', self.readBar, 10)
+        #self.bar_quat_sub = node.create_subscription(QuaternionStamped, '/bar_quat', self.readBar, 10)
 
         # Define the various points and initialize as initial joint/task arrays.
         self.L = 0.688 # distance between hands
@@ -111,13 +113,10 @@ class Trajectory():
 
         self.lam = 20.0
 
-    def readBar(self, bar_quat_msg):
-        # read in and save published bar orientation quaternion
-        bar_q = bar_quat_msg.quaternion # unpack ROS Quaternion from QuaterionStamped msg
-        q = quat_from_Quaternion(bar_q) # extract q from ROS object
-        print(q)
-        (self.pan, tilt, _) = angles_from_quat(q.flatten().tolist())
-        self.tilt = tilt - np.pi/2
+    def readBar(self, bar_angles_msg):
+        # read in and save published bar pan/tilt angles
+        bar_angles = bar_angles_msg.data # unpack ROS msg
+        [self.pan, self.tilt] = bar_angles
 
     # Declare the joint names.
     def jointnames(self):

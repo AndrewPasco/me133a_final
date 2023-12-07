@@ -34,9 +34,7 @@ from geometry_msgs.msg          import TransformStamped
 from tf2_ros                    import TransformBroadcaster
 from rclpy.time                 import Duration
 from me133a_final.utils.TransformHelpers     import *
-from visualization_msgs.msg     import MarkerArray
-from visualization_msgs.msg     import Marker
-from me133a_final.utils.shapes  import *
+from me133a_final.utils.BarNodeFloats  import *
 
 
 #

@@ -26,6 +26,7 @@ from rclpy.node             import Node
 from rclpy.qos              import QoSProfile, DurabilityPolicy
 from geometry_msgs.msg      import Quaternion
 from geometry_msgs.msg      import QuaternionStamped
+from std_msgs.msg           import Float64MultiArray
 from visualization_msgs.msg import Marker
 from visualization_msgs.msg import MarkerArray
 
@@ -102,12 +103,16 @@ class PanTiltGUI(QWidget):
 
     def panHandler(self, value):
         self.pan = value
+        print(f"pan: {self.pan}")
         self.value = quat_from_R(Rotx(self.tilt)@Roty(self.pan))
+        print(f"quat: {self.value}")
         self.callback(self.value)
 
     def tiltHandler(self, value):
         self.tilt = value + np.pi/2
+        print(f"tilt: {self.tilt}")
         self.value = quat_from_R(Rotx(self.tilt)@Roty(self.pan))
+        print(f"quat: {self.value}")
         self.callback(self.value)
 
     def kill(self, signum, frame):
