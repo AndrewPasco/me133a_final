@@ -13,7 +13,7 @@ from me133a_final.utils.BarNodeFloats import *
 def main(args=None):
     # Initialize ROS and the GUI node (10Hz).
     rclpy.init(args=args)
-    bar_angles = [0.0, 0.0]
+    bar_angles = [0.0, 0.0, 0.688]
     node = GUINode('bar', bar_angles, 100) # fixme with correct initial orientation
 
     # Run until interrupted.

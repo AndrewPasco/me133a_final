@@ -88,7 +88,7 @@ class PanTiltGUI(QWidget):
         super().__init__()
         self.value    = angles0
         self.callback = callback
-        [self.pan, self.tilt] = angles0
+        [self.pan, self.tilt, self.dist] = angles0
         self.initUI(self.value)
 
     def initUI(self, angles):
@@ -96,6 +96,7 @@ class PanTiltGUI(QWidget):
         vbox = QVBoxLayout()
         vbox.addWidget(SingleVariable('Pan', angles[0], -np.pi/4, np.pi/4, self.panHandler))
         vbox.addWidget(SingleVariable('Tilt', angles[1], -np.pi/8, np.pi/8, self.tiltHandler))
+        vbox.addWidget(SingleVariable('Distance', angles[2], 0.0, 1.3, self.distHandler))
 
         self.setLayout(vbox)
         self.setWindowTitle('Pan/Tilt')
@@ -103,12 +104,17 @@ class PanTiltGUI(QWidget):
 
     def panHandler(self, value):
         self.pan = value
-        self.value = [self.pan, self.tilt]
+        self.value = [self.pan, self.tilt, self.dist]
         self.callback(self.value)
 
     def tiltHandler(self, value):
         self.tilt = value
-        self.value = [self.pan, self.tilt]
+        self.value = [self.pan, self.tilt, self.dist]
+        self.callback(self.value)
+        
+    def distHandler(self, value):
+        self.dist = value
+        self.value = [self.pan, self.tilt, self.dist]
         self.callback(self.value)
 
     def kill(self, signum, frame):
@@ -141,6 +147,7 @@ class GUINode(Node):
         self.setvalue(initvalue)
         self.pan = self.bar_angles.data[0]
         self.tilt = self.bar_angles.data[1]
+        self.dist = self.bar_angles.data[2]
 
         # Save the bar orientation
         self.q = quat_from_R(Rotx(np.pi/2)@Rotx(self.tilt)@Roty(self.pan))
@@ -161,8 +168,8 @@ class GUINode(Node):
         self.marker.pose.position      = Point_from_p(pxyz(0.0,0.0,1.96)) # fixme to be the correct location
         self.marker.scale.x            = 0.05 # fixme
         self.marker.scale.y            = 0.05 # fixme
-        self.marker.scale.z            = 1.0 # fixme
-        self.marker.color.r            = 1.0
+        self.marker.scale.z            = 1.5 # fixme
+        self.marker.color.r            = 1.5
         self.marker.color.g            = 0.0
         self.marker.color.b            = 0.0
         self.marker.color.a            = 0.8     # Make transparent!
@@ -246,8 +253,8 @@ class GUINode(Node):
         self.marker.pose.position      = Point_from_p(pxyz(0.0,0.0,1.96)) # fixme to be the correct location
         self.marker.scale.x            = 0.05 # fixme
         self.marker.scale.y            = 0.05 # fixme
-        self.marker.scale.z            = 1.0  # fixme
-        self.marker.color.r            = 1.0
+        self.marker.scale.z            = 1.5  # fixme
+        self.marker.color.r            = 1.5
         self.marker.color.g            = 0.0
         self.marker.color.b            = 0.0
         self.marker.color.a            = 0.8     # Make transparent!
@@ -269,4 +276,5 @@ class GUINode(Node):
         self.bar_angles.data = value
         self.pan = self.bar_angles.data[0]
         self.tilt = self.bar_angles.data[1]
+        self.dist = self.bar_angles.data[2]
         self.q = quat_from_R(Rotx(np.pi/2)@Rotx(self.tilt)@Roty(self.pan))

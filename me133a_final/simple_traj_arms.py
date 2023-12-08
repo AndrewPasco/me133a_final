@@ -87,6 +87,8 @@ class Trajectory():
         # Set up the bar angle array subscriber
         self.bar_angle_sub = node.create_subscription(Float64MultiArray, '/bar_angles', self.readBar, 10)
         #self.bar_quat_sub = node.create_subscription(QuaternionStamped, '/bar_quat', self.readBar, 10)
+        
+        
 
         # Define the various points and initialize as initial joint/task arrays.
         self.L = 0.688 # distance between hands
@@ -110,13 +112,14 @@ class Trajectory():
         # Initialize the bar angles as 0 (standard config)
         self.pan= 0.0
         self.tilt = 0.0
+        self.dist = 0.688
 
         self.lam = 20.0
 
     def readBar(self, bar_angles_msg):
         # read in and save published bar pan/tilt angles
         bar_angles = bar_angles_msg.data # unpack ROS msg
-        [self.pan, self.tilt] = bar_angles
+        [self.pan, self.tilt, self.dist] = bar_angles
 
     # Declare the joint names.
     def jointnames(self):
@@ -128,18 +131,18 @@ class Trajectory():
         sz = 0.225*np.cos(np.pi*(t)) # path variable for z
         
         # compute additional offset needed from bar tilt to keep hands on bar
-        tilt_compensate = self.L/2 * np.sin(self.tilt)
+        tilt_compensate = self.dist/2 * np.sin(self.tilt)
 
         # desired trajectory of left hand is moving up and down at constant (x,y)
         # TODO: consider tilt angle in z-trajectory of hand
-        xd_l = np.array([float(self.x0_l[0]), float(self.x0_l[1]), sz + 0.563 + tilt_compensate]).reshape(-1,1)
+        xd_l = np.array([float(self.x0_l[0]), self.dist/2*(np.cos(self.tilt)), sz + 0.563 + tilt_compensate]).reshape(-1,1)
         vd_l = np.array([0.0, 0.0, -0.225*np.pi*np.sin(np.pi*(t))]).reshape(-1,1)
         Rd_l = self.R0_l
         wd_l = np.array([0.0,0.0,0.0]).reshape(-1,1)
 
         # desired trajectory of right hand is moving up and down at constant (x,y)
         # TODO: consider tilt angle in z-trajectory of hand
-        xd_r = np.array([float(self.x0_r[0]), float(self.x0_r[1]), sz + 0.563 - tilt_compensate]).reshape(-1,1)
+        xd_r = np.array([float(self.x0_r[0]), -self.dist/2*(np.cos(self.tilt)), sz + 0.563 - tilt_compensate]).reshape(-1,1)
         vd_r = np.array([0.0, 0.0, -0.225*np.pi*np.sin(np.pi*(t))]).reshape(-1,1)
         Rd_r = self.R0_r
         wd_r = np.array([0.0,0.0,0.0]).reshape(-1,1)
