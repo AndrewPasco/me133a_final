@@ -81,19 +81,18 @@ class Trajectory():
     # Initialization.
     def __init__(self, node):
         # Set up the kinematic chain object.
-        self.chain_larm = KinematicChain(node, 'utorso', 'l_hand_tip', self.jointnames())
-        self.chain_rarm = KinematicChain(node, 'utorso', 'r_hand_tip', self.jointnames())
+        self.chain_larm = KinematicChain(node, 'pelvis', 'l_hand_tip', self.jointnames())
+        self.chain_rarm = KinematicChain(node, 'pelvis', 'r_hand_tip', self.jointnames())
 
         # Set up the bar angle array subscriber
         self.bar_angle_sub = node.create_subscription(Float64MultiArray, '/bar_angles', self.readBar, 10)
         #self.bar_quat_sub = node.create_subscription(QuaternionStamped, '/bar_quat', self.readBar, 10)
-        
-        
 
         # Define the various points and initialize as initial joint/task arrays.
         self.L = 0.688 # distance between hands
         
-        self.q_l = np.array([-1.201, 0.654,
+        self.q_l = np.array([0.0, 0.0, 0.0,
+                             -1.201, 0.654,
                              0.0, 1.044,
                              -0.375, 0.467, 0.0]).reshape((-1,1)) # list of joint coords chaining from utorso to lhand
         self.x0_l = np.array([0.42208, self.L/2, 0.92362])
@@ -101,7 +100,8 @@ class Trajectory():
         (self.x_l, self.R_l, _, _) = self.chain_larm.fkin(self.q_l)
         self.T_l = T_from_Rp(self.R_l, self.x_l)
         
-        self.q_r = np.array([1.201, -0.654,
+        self.q_r = np.array([0.0, 0.0, 0.0,
+                             1.201, -0.654,
                              0.0, -1.044, 
                              -0.375, -0.467, 0.0]).reshape((-1,1)) # list of joint coords chaining from utorso to rhand
         self.x0_r = np.array([0.42208,-self.L/2, 0.92362]).reshape(-1,1)
@@ -109,17 +109,16 @@ class Trajectory():
         (self.x_r, self.R_r, _, _) = self.chain_rarm.fkin(self.q_r)
         self.T_r = T_from_Rp(self.R_r, self.x_r)
 
-        # Initialize the bar angles as 0 (standard config)
+        # Initialize the bar angles as 0 (base config)
         self.pan= 0.0
         self.tilt = 0.0
-        self.dist = 0.688
 
         self.lam = 20.0
 
     def readBar(self, bar_angles_msg):
         # read in and save published bar pan/tilt angles
         bar_angles = bar_angles_msg.data # unpack ROS msg
-        [self.pan, self.tilt, self.dist] = bar_angles
+        [self.pan, self.tilt] = bar_angles
 
     # Declare the joint names.
     def jointnames(self):
@@ -131,18 +130,18 @@ class Trajectory():
         sz = 0.225*np.cos(np.pi*(t)) # path variable for z
         
         # compute additional offset needed from bar tilt to keep hands on bar
-        tilt_compensate = self.dist/2 * np.sin(self.tilt)
+        tilt_compensate = self.L/2 * np.sin(self.tilt)
 
         # desired trajectory of left hand is moving up and down at constant (x,y)
         # TODO: consider tilt angle in z-trajectory of hand
-        xd_l = np.array([float(self.x0_l[0]), self.dist/2*(np.cos(self.tilt)), sz + 0.563 + tilt_compensate]).reshape(-1,1)
+        xd_l = np.array([float(self.x0_l[0]), float(self.x0_l[1]), sz + 0.763 + tilt_compensate]).reshape(-1,1)
         vd_l = np.array([0.0, 0.0, -0.225*np.pi*np.sin(np.pi*(t))]).reshape(-1,1)
         Rd_l = Rotx(self.tilt)@self.R0_l
         wd_l = np.array([0.0,0.0,0.0]).reshape(-1,1)
 
         # desired trajectory of right hand is moving up and down at constant (x,y)
         # TODO: consider tilt angle in z-trajectory of hand
-        xd_r = np.array([float(self.x0_r[0]), -self.dist/2*(np.cos(self.tilt)), sz + 0.563 - tilt_compensate]).reshape(-1,1)
+        xd_r = np.array([float(self.x0_r[0]), float(self.x0_r[1]), sz + 0.763 - tilt_compensate]).reshape(-1,1)
         vd_r = np.array([0.0, 0.0, -0.225*np.pi*np.sin(np.pi*(t))]).reshape(-1,1)
         Rd_r = Rotx(self.tilt)@self.R0_r
         wd_r = np.array([0.0,0.0,0.0]).reshape(-1,1)
@@ -152,16 +151,20 @@ class Trajectory():
         self.T_l = T_from_Rp(self.R_l, self.x_l)
         e_l = np.vstack((ep(xd_l, self.x_l), eR(Rd_l, self.R_l)))
         J_l = np.vstack((Jv_l, Jw_l))
+        A = J_l[:,0:3]
+        B = J_l[:,3:]
         xdotd_l = np.vstack((vd_l, wd_l))
         
         (self.x_r, self.R_r, Jv_r, Jw_r) = self.chain_rarm.fkin(self.q_r)
         self.T_r = T_from_Rp(self.R_r, self.x_r)
         e_r = np.vstack((ep(xd_r, self.x_r), eR(Rd_r, self.R_r)))
         J_r = np.vstack((Jv_r, Jw_r))
+        C = J_r[:,0:3]
+        D = J_r[:,3:]
         xdotd_r = np.vstack((vd_r, wd_r))
 
         e = np.vstack((e_l, e_r))
-        J = np.vstack((np.hstack((J_l, np.zeros((6,7)))),np.hstack((np.zeros((6,7)), J_r)))) # see onenote
+        J = np.vstack((np.hstack((J_l, np.zeros((6,7)))),np.hstack((C, np.zeros((6,7)), D)))) # see onenote
         xdotd = np.vstack((xdotd_l, xdotd_r))
 
         # Compute position/orientation of the pelvis (w.r.t. world).
@@ -170,20 +173,20 @@ class Trajectory():
         pan_compensate = np.array([norm2*np.cos(self.pan),
                                    norm2*np.sin(self.pan),
                                    xavg[2]])
-        ppelvis = pxyz(0.0, 0.0, 1.75) - pan_compensate
+        ppelvis = pxyz(0.0, 0.0, 1.96) - pan_compensate
         Rpelvis = Rotz(self.pan)
         TPELVIS = T_from_Rp(Rpelvis, ppelvis)
         
         Jwinv = np.transpose(J)@np.linalg.inv(J@np.transpose(J) + (0.05**2)*np.eye(12)) # implement weighted inverse to help near singularities
 
         qdot = Jwinv@(xdotd + e*self.lam)
-        qdot_l = qdot[0:7]
-        qdot_r = qdot[7:]
+        qdot_l = qdot[0:10]
+        qdot_r = np.concatenate((qdot[0:3],qdot[10:]))
         self.q_l = self.q_l + qdot_l*dt
         self.q_r = self.q_r + qdot_r*dt
         
-        q = np.vstack((z3, self.q_l, z8, self.q_r, z13)) # important: this q should be same order as joints presented in joint_list above
-        qdot = np.vstack((z3, qdot_l, z8, qdot_r, z13))
+        q = np.vstack((self.q_l, z8, self.q_r[3:], z13)) # important: this q should be same order as joints presented in joint_list above
+        qdot = np.vstack((qdot_l, z8, qdot_r[3:], z13))
         # Return the position and velocity as python lists.
         return (q.flatten().tolist(), qdot.flatten().tolist(), TPELVIS, self.T_l, self.T_r)
 
